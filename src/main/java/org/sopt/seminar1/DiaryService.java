@@ -18,5 +18,9 @@ public class DiaryService {
     void deleteDiary(final long id){
         diaryRepository.delete(id);
     }
+
+    void patchDiary(final Long id, final String body){
+        diaryRepository.patch(id, body);
+    }
 }
 

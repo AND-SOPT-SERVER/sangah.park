@@ -40,6 +40,7 @@ public class DiaryController {
     }
 
     final void patch(final String id, final String body) {
+        diaryService.patchDiary(Long.parseLong(id), body);
 
     }
 

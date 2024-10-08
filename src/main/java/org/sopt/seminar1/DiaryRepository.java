@@ -37,4 +37,9 @@ public class DiaryRepository {
     void delete(final Long id){
         storage.remove(id);
     }
+
+    void patch(final Long id,final String body){
+        final List<Diary> diaryList = new ArrayList<>();
+        storage.put(id, body);
+    }
 }
