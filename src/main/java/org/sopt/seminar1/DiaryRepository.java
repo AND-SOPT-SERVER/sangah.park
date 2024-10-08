@@ -33,4 +33,8 @@ public class DiaryRepository {
         // (3) 불러온 자료구조를 응답
         return diaryList;
     }
+
+    void delete(final Long id){
+        storage.remove(id);
+    }
 }

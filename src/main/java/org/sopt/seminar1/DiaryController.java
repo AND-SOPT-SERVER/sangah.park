@@ -34,6 +34,8 @@ public class DiaryController {
     }
 
     final void delete(final String id) {
+//        return diaryService.deleteDiary(id);
+        diaryService.deleteDiary(Long.parseLong(id));
 
     }
 
