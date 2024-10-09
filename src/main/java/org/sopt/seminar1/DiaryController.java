@@ -18,10 +18,8 @@ public class DiaryController {
         this.status = Status.FINISHED;
     }
 
-    // APIS
     final List<Diary> getList() {
         return diaryService.getDiaryList();
-        //return new ArrayList<>();
     }
 
     final void post(final String body) {
@@ -34,14 +32,12 @@ public class DiaryController {
     }
 
     final void delete(final String id) {
-//        return diaryService.deleteDiary(id);
         diaryService.deleteDiary(Long.parseLong(id));
 
     }
 
     final void patch(final String id, final String body) {
         diaryService.patchDiary(Long.parseLong(id), body);
-
     }
 
     enum Status {
