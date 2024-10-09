@@ -22,5 +22,9 @@ public class DiaryService {
     void patchDiary(final Long id, final String body){
         diaryRepository.patch(id, body);
     }
+
+    void restoreDiary(final Long id){
+        diaryRepository.restore(id);
+    }
 }
 
