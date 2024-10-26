@@ -1,6 +1,7 @@
 package org.sopt.diary.api;
 
 import org.apache.coyote.BadRequestException;
+import org.sopt.diary.dto.PatchedDiaryContent;
 import org.sopt.diary.service.Diary;
 
 import org.sopt.diary.service.DiaryService;
@@ -37,9 +38,18 @@ public class DiaryController {
     }
 
     @DeleteMapping("/diaries/{id}")
-    ResponseEntity delete(@PathVariable final Long id){
+    public ResponseEntity delete(@PathVariable final Long id){
         diaryService.deleteDiary(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/diaries/{id}")
+    public ResponseEntity patch(@PathVariable final Long id, @RequestBody PatchedDiaryContent content) {
+        if (content.getContent().length() > 30 ){
+            throw new BadRequestException("최대 30자까지 작성 가능합니다.");
+        }
+        diaryService.patchDiary(id, content.getContent());
+        return ResponseEntity.ok().build();
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

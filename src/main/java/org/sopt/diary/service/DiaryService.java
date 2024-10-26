@@ -32,4 +32,11 @@ public class DiaryService {
                 .orElseThrow(() -> new EntityNotFoundException(id + "에 해당하는 다이어리를 찾을 수 없습니다."));
         diaryRepository.delete(diary);
     }
+
+    public void patchDiary(long id, String content){
+        DiaryEntity diary=diaryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(id + "에 해당하는 다이어리를 찾을 수 없습니다."));
+                diary.setContent(content);
+        diaryRepository.save(diary);
+    }
 }

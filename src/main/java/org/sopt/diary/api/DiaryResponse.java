@@ -6,7 +6,7 @@ public class DiaryResponse {
     private final long id;
     private final LocalDateTime dateTime;
     private final String title;
-    private final String content;
+    private String content;
 
     public DiaryResponse(long id, LocalDateTime dateTime, String title, String content){
         this.id=id;
