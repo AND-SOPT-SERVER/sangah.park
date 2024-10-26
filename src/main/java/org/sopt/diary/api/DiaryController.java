@@ -38,13 +38,13 @@ public class DiaryController {
     }
 
     @DeleteMapping("/diaries/{id}")
-    public ResponseEntity delete(@PathVariable final Long id){
+    public ResponseEntity<Void>  delete(@PathVariable final Long id){
         diaryService.deleteDiary(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/diaries/{id}")
-    public ResponseEntity patch(@PathVariable final Long id, @RequestBody PatchedDiaryContent content) {
+    public ResponseEntity<Void> patch(@PathVariable final Long id, @RequestBody PatchedDiaryContent content) {
         if (content.getContent().length() > 30 ){
             throw new BadRequestException("최대 30자까지 작성 가능합니다.");
         }
