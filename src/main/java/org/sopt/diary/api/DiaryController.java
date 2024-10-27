@@ -1,16 +1,13 @@
 package org.sopt.diary.api;
 
-import org.apache.coyote.BadRequestException;
 import org.sopt.diary.dto.PatchedDiaryContent;
-import org.sopt.diary.service.Diary;
 
+import org.sopt.diary.service.DiaryDetail;
 import org.sopt.diary.service.DiaryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 public class DiaryController {
@@ -32,9 +29,16 @@ public class DiaryController {
     @GetMapping("/diaries")
     ResponseEntity<DiaryListResponse> get() {
         return ResponseEntity.ok(
-                new DiaryListResponse(diaryService.getList().stream()
-                        .map(diary -> new DiaryResponse(diary.getId(), diary.getDateTime(), diary.getTitle(), diary.getContent())).toList())
+                new DiaryListResponse(diaryService.getDiaryTen().stream()
+                        .map(diary -> new DiaryResponse(diary.getTitle(), diary.getContent())).toList())
         );
+    }
+
+    @GetMapping("/diaries/{id}")
+    ResponseEntity<DiaryDetailResponse> getDetailList(@PathVariable final Long id) {
+        DiaryDetail diaryDetail = (DiaryDetail) diaryService.getList(id);
+        DiaryDetailResponse diaryResponse = new DiaryDetailResponse(diaryDetail.getId(), diaryDetail.getDateTime(), diaryDetail.getTitle(), diaryDetail.getContent());
+        return ResponseEntity.ok(diaryResponse);
     }
 
     @DeleteMapping("/diaries/{id}")

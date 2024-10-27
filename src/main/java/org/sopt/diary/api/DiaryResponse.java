@@ -1,26 +1,14 @@
 package org.sopt.diary.api;
 
-import java.time.LocalDateTime;
 
 public class DiaryResponse {
-    private final long id;
-    private final LocalDateTime dateTime;
+
     private final String title;
     private String content;
 
-    public DiaryResponse(long id, LocalDateTime dateTime, String title, String content){
-        this.id=id;
-        this.dateTime=dateTime;
+    public DiaryResponse(String title, String content){
         this.title=title;
         this.content=content;
-    }
-
-    public long getId(){
-        return id;
-    }
-
-    public LocalDateTime getDateTime(){
-        return this.dateTime;
     }
 
     public String getTitle(){
