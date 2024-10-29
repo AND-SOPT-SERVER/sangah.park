@@ -2,8 +2,10 @@ package org.sopt.diary.service;
 
 import java.util.List;
 
-import jakarta.persistence.EntityNotFoundException;
-import org.sopt.diary.api.DiaryRequest;
+import org.sopt.diary.api.dto.req.DiaryRequest;
+import org.sopt.diary.api.dto.res.DiaryDetail;
+import org.sopt.diary.exception.FailureStatus;
+import org.sopt.diary.exception.GlobalException;
 import org.sopt.diary.repository.DiaryEntity;
 import org.sopt.diary.repository.DiaryRepository;
 import org.springframework.stereotype.Component;
@@ -30,20 +32,20 @@ public class DiaryService {
 
     public DiaryDetail getList(long id) {
         DiaryEntity diary = diaryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(id + "에 해당하는 다이어리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new GlobalException(FailureStatus.DIARY_NOT_FOUND));
         return new DiaryDetail(diary.getId(), diary.getDateTime(), diary.getTitle(), diary.getContent());
     }
 
 
     public void deleteDiary(long id){
         DiaryEntity diary=diaryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(id + "에 해당하는 다이어리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new GlobalException(FailureStatus.DIARY_NOT_FOUND));
         diaryRepository.delete(diary);
     }
 
     public void patchDiary(long id, String content){
         DiaryEntity diary=diaryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(id + "에 해당하는 다이어리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new GlobalException(FailureStatus.DIARY_NOT_FOUND));
                 diary.setContent(content);
         diaryRepository.save(diary);
     }

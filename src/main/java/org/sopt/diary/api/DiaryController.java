@@ -1,10 +1,15 @@
 package org.sopt.diary.api;
 
-import org.sopt.diary.dto.PatchedDiaryContent;
+import org.sopt.diary.api.dto.res.PatchedDiaryContent;
 
-import org.sopt.diary.service.DiaryDetail;
+import org.sopt.diary.api.dto.res.DiaryDetail;
+import org.sopt.diary.api.dto.req.DiaryRequest;
+import org.sopt.diary.api.dto.res.DiaryDetailResponse;
+import org.sopt.diary.api.dto.res.DiaryListResponse;
+import org.sopt.diary.api.dto.res.DiaryResponse;
+import org.sopt.diary.exception.FailureStatus;
+import org.sopt.diary.exception.GlobalException;
 import org.sopt.diary.service.DiaryService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +26,7 @@ public class DiaryController {
     @PostMapping("/diaries")
     void post(@RequestBody DiaryRequest diaryRequest) {
         if (diaryRequest.content().length() > 30 ){
-            throw new BadRequestException("최대 30자까지 작성 가능합니다.");
+            throw new GlobalException(FailureStatus.INVALID_PARAMETER);
         }
         diaryService.createDiary(diaryRequest);
     }
@@ -50,16 +55,16 @@ public class DiaryController {
     @PatchMapping("/diaries/{id}")
     public ResponseEntity<Void> patch(@PathVariable final Long id, @RequestBody PatchedDiaryContent content) {
         if (content.getContent().length() > 30 ){
-            throw new BadRequestException("최대 30자까지 작성 가능합니다.");
-        }
+            throw new GlobalException(FailureStatus.INVALID_PARAMETER);
+       }
         diaryService.patchDiary(id, content.getContent());
         return ResponseEntity.ok().build();
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+/*    @ResponseStatus(HttpStatus.BAD_REQUEST)
     class BadRequestException extends RuntimeException {
         public BadRequestException(String message) {
             super(message);
         }
-    }
+    }*/
 }
