@@ -2,8 +2,7 @@ package org.sopt.diary.service;
 
 import java.util.List;
 
-import org.sopt.diary.api.dto.req.DiaryRequest;
-import org.sopt.diary.api.dto.res.DiaryDetail;
+import org.sopt.diary.api.dto.req.DiaryPostRequest;
 import org.sopt.diary.exception.FailureStatus;
 import org.sopt.diary.exception.GlobalException;
 import org.sopt.diary.repository.DiaryEntity;
@@ -13,27 +12,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @Component
 public class DiaryService {
+    private static final int MAX_LIST_OF_DIARY = 10;
+
     private final DiaryRepository diaryRepository;
 
     public DiaryService (DiaryRepository diaryRepository){
         this.diaryRepository =  diaryRepository;
     }
 
-    public void createDiary(@RequestBody DiaryRequest diaryRequest) {
-        diaryRepository.save(new DiaryEntity(diaryRequest.title(), diaryRequest.content()));
+    public void createDiary(@RequestBody DiaryPostRequest diaryPostRequest) {
+        diaryRepository.save(new DiaryEntity(diaryPostRequest.title(), diaryPostRequest.content()));
     }
 
-    public List<Diary> getDiaryTen(){
-        return diaryRepository.findAll().stream()
+    public List<DiaryEntity> getDiaryTen(){
+        List<DiaryEntity> diaries = diaryRepository.findAll();
+        return diaries.stream()
                 .sorted((diary1, diary2)->diary2.getDateTime().compareTo(diary1.getDateTime()))
-                .limit(10)
-                .map(diaryEntity -> new Diary(diaryEntity.getTitle(), diaryEntity.getContent())).toList();
+                .limit(MAX_LIST_OF_DIARY)
+                .toList();
     }
 
-    public DiaryDetail getList(long id) {
+    public Diary getList(long id) {
         DiaryEntity diary = diaryRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(FailureStatus.DIARY_NOT_FOUND));
-        return new DiaryDetail(diary.getId(), diary.getDateTime(), diary.getTitle(), diary.getContent());
+        return new Diary(diary.getId(), diary.getDateTime(), diary.getTitle(), diary.getContent());
     }
 
 
@@ -46,7 +48,7 @@ public class DiaryService {
     public void patchDiary(long id, String content){
         DiaryEntity diary=diaryRepository.findById(id)
                 .orElseThrow(() -> new GlobalException(FailureStatus.DIARY_NOT_FOUND));
-                diary.setContent(content);
+        diary.setContent(content);
         diaryRepository.save(diary);
     }
 }

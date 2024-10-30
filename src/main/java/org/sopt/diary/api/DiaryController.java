@@ -1,9 +1,9 @@
 package org.sopt.diary.api;
 
-import org.sopt.diary.api.dto.res.PatchedDiaryContent;
+import org.sopt.diary.api.dto.req.DiaryPatchRequest;
 
-import org.sopt.diary.api.dto.res.DiaryDetail;
-import org.sopt.diary.api.dto.req.DiaryRequest;
+import org.sopt.diary.service.Diary;
+import org.sopt.diary.api.dto.req.DiaryPostRequest;
 import org.sopt.diary.api.dto.res.DiaryDetailResponse;
 import org.sopt.diary.api.dto.res.DiaryListResponse;
 import org.sopt.diary.api.dto.res.DiaryResponse;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class DiaryController {
-
+    private static final int MAX_LENGTH_OF_DIARY = 30;
     private final DiaryService diaryService;
 
     public DiaryController(DiaryService diaryService) {
@@ -24,11 +24,11 @@ public class DiaryController {
     }
 
     @PostMapping("/diaries")
-    void post(@RequestBody DiaryRequest diaryRequest) {
-        if (diaryRequest.content().length() > 30 ){
+    void post(@RequestBody DiaryPostRequest diaryPostRequest) {
+        if (diaryPostRequest.content().length() > MAX_LENGTH_OF_DIARY ){
             throw new GlobalException(FailureStatus.INVALID_PARAMETER);
         }
-        diaryService.createDiary(diaryRequest);
+        diaryService.createDiary(diaryPostRequest);
     }
 
     @GetMapping("/diaries")
@@ -41,8 +41,8 @@ public class DiaryController {
 
     @GetMapping("/diaries/{id}")
     ResponseEntity<DiaryDetailResponse> getDetailList(@PathVariable final Long id) {
-        DiaryDetail diaryDetail = (DiaryDetail) diaryService.getList(id);
-        DiaryDetailResponse diaryResponse = new DiaryDetailResponse(diaryDetail.getId(), diaryDetail.getDateTime(), diaryDetail.getTitle(), diaryDetail.getContent());
+        Diary diary = (Diary) diaryService.getList(id);
+        DiaryDetailResponse diaryResponse = new DiaryDetailResponse(diary.getId(), diary.getDateTime(), diary.getTitle(), diary.getContent());
         return ResponseEntity.ok(diaryResponse);
     }
 
@@ -53,18 +53,11 @@ public class DiaryController {
     }
 
     @PatchMapping("/diaries/{id}")
-    public ResponseEntity<Void> patch(@PathVariable final Long id, @RequestBody PatchedDiaryContent content) {
-        if (content.getContent().length() > 30 ){
+    public ResponseEntity<Void> patch(@PathVariable final Long id, @RequestBody DiaryPatchRequest diaryPatchRequest) {
+        if (diaryPatchRequest.content().length() > MAX_LENGTH_OF_DIARY ){
             throw new GlobalException(FailureStatus.INVALID_PARAMETER);
        }
-        diaryService.patchDiary(id, content.getContent());
+        diaryService.patchDiary(id, diaryPatchRequest.content());
         return ResponseEntity.ok().build();
     }
-
-/*    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    class BadRequestException extends RuntimeException {
-        public BadRequestException(String message) {
-            super(message);
-        }
-    }*/
 }
