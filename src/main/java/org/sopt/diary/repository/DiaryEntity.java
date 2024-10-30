@@ -1,7 +1,9 @@
 package org.sopt.diary.repository;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -12,13 +14,15 @@ public class DiaryEntity {
     public Long id;
 
     @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone="Asia/Seoul")
     @CreationTimestamp
     public LocalDateTime dateTime;
 
-    @Column
+    @Column(name="title")
     public String title;
 
-    @Column(length=30)
+    @Column(name="content")
     public String content;
 
     public DiaryEntity(){
@@ -29,7 +33,7 @@ public class DiaryEntity {
         this.content=content;
     }
 
-    public long getId(){
+    public long getId() {
         return this.id;
     }
 
