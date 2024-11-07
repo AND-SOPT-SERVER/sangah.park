@@ -1,18 +1,23 @@
 package org.sopt.diary.service;
+
+import org.sopt.diary.constant.DiaryScope;
+
 import java.time.LocalDateTime;
 
-public class Diary {
+public class DiaryType {
 
     private final long id;
     private final LocalDateTime dateTime;
     private final String title;
     private final String content;
+    private final DiaryScope scope;
 
-    public Diary(long id, LocalDateTime dateTime, String title, String content){
+    public DiaryType(long id, LocalDateTime dateTime, String title, String content, DiaryScope scope){
         this.id = id;
         this.dateTime= dateTime;
         this.title = title;
         this.content = content;
+        this.scope = scope;
     }
 
     public long getId(){
@@ -30,5 +35,7 @@ public class Diary {
     public String getContent(){
         return  content;
     }
+
+    public DiaryScope getScope() {return scope;}
 }
 
