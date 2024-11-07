@@ -3,6 +3,7 @@ package org.sopt.diary.service;
 import java.util.List;
 
 import org.sopt.diary.api.dto.req.DiaryPostRequest;
+import org.sopt.diary.constant.DiaryScope;
 import org.sopt.diary.exception.FailureStatus;
 import org.sopt.diary.exception.GlobalException;
 import org.sopt.diary.repository.DiaryEntity;
@@ -35,8 +36,9 @@ public class DiaryService {
     }
 
     public List<DiaryEntity> getDiaryTen(Long userId){
-        List<DiaryEntity> diaries = diaryRepository.findByUserId(userId);
+        List<DiaryEntity> diaries = diaryRepository.findAll();
         return diaries.stream()
+                .filter(diary -> diary.getUser().getId().equals(userId) || diary.getScope() == DiaryScope.PUBLIC)
                 .sorted((diaryEntity1, diaryEntity2)-> diaryEntity2.getDateTime().compareTo(diaryEntity1.getDateTime()))
                 .limit(MAX_LIST_OF_DIARY)
                 .toList();

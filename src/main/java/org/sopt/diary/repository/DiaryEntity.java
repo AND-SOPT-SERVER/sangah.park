@@ -66,6 +66,8 @@ public class DiaryEntity {
 
     public DiaryScope getScope() { return this.scope; }
 
+    public UserEntity getUser() {return this.user;}
+
 
     public void setTitle(String title) {
         this.title = title;

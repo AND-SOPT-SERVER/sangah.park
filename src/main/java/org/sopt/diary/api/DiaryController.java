@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/diaries")
 public class DiaryController {
     private static final int MAX_LENGTH_OF_DIARY = 30;
     private final DiaryService diaryService;
@@ -25,8 +26,8 @@ public class DiaryController {
         this.diaryService = diaryService;
     }
 
-    @PostMapping("/diaries")
-    ResponseEntity<Object> post(@RequestHeader("UserId") Long userId,  @RequestBody DiaryPostRequest diaryPostRequest) {
+    @PostMapping
+    ResponseEntity<Object> post(@RequestHeader("UserId") final Long userId, @RequestBody DiaryPostRequest diaryPostRequest) {
         if (diaryPostRequest.content().length() > MAX_LENGTH_OF_DIARY ){
             throw new GlobalException(FailureStatus.INVALID_PARAMETER);
         }
@@ -34,29 +35,29 @@ public class DiaryController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/diaries")
-    ResponseEntity<DiaryListResponse> get(@RequestHeader("UserId") Long userId) {
+    @GetMapping
+    ResponseEntity<DiaryListResponse> get(@RequestHeader("UserId") final Long userId) {
         return ResponseEntity.ok(
                 new DiaryListResponse(diaryService.getDiaryTen(userId).stream()
                         .map(diary -> new DiaryResponse(diary.getTitle(), diary.getContent())).toList())
         );
     }
 
-    @GetMapping("/diaries/{id}")
-    ResponseEntity<DiaryDetailResponse> getDetailList(@RequestHeader("UserId") Long userId, @PathVariable(name="id") final Long id) {
+    @GetMapping("/{id}")
+    ResponseEntity<DiaryDetailResponse> getDetailList(@RequestHeader("UserId") final Long userId, @PathVariable(name="id") final Long id) {
         DiaryType diaryType = (DiaryType) diaryService.getList(userId, id);
-        DiaryDetailResponse diaryResponse = new DiaryDetailResponse(diaryType.getId(), diaryType.getDateTime(), diaryType.getTitle(), diaryType.getContent());
+        DiaryDetailResponse diaryResponse = new DiaryDetailResponse(diaryType.getId(), diaryType.getDateTime(), diaryType.getTitle(), diaryType.getContent(), diaryType.getScope());
         return ResponseEntity.ok(diaryResponse);
     }
 
-    @DeleteMapping("/diaries/{id}")
-    public ResponseEntity<Void>  delete(@RequestHeader("UserId") Long userId, @PathVariable final Long id){
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void>  delete(@RequestHeader("UserId") final Long userId, @PathVariable(name="id") final Long id){
         diaryService.deleteDiary(userId, id);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/diaries/{id}")
-    public ResponseEntity<Void> patch(@RequestHeader("UserId") Long userId, @PathVariable("id") final Long id, @RequestBody DiaryPatchRequest diaryPatchRequest) {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> patch(@RequestHeader("UserId") Long userId, @PathVariable(name="id") final Long id, @RequestBody DiaryPatchRequest diaryPatchRequest) {
         if (diaryPatchRequest.content().length() > MAX_LENGTH_OF_DIARY ){
             throw new GlobalException(FailureStatus.INVALID_PARAMETER);
        }

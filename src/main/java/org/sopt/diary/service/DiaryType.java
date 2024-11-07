@@ -1,6 +1,5 @@
 package org.sopt.diary.service;
 
-/*import org.sopt.diary.constant.Scope;*/
 import org.sopt.diary.constant.DiaryScope;
 
 import java.time.LocalDateTime;
@@ -11,14 +10,14 @@ public class DiaryType {
     private final LocalDateTime dateTime;
     private final String title;
     private final String content;
- /*   private final Scope scope;
-*/
-    public DiaryType(long id, LocalDateTime dateTime, String title, String content,/*, Scope scope*/DiaryScope scope){
+    private final DiaryScope scope;
+
+    public DiaryType(long id, LocalDateTime dateTime, String title, String content, DiaryScope scope){
         this.id = id;
         this.dateTime= dateTime;
         this.title = title;
         this.content = content;
-/*        this.scope = scope;*/
+        this.scope = scope;
     }
 
     public long getId(){
@@ -36,5 +35,7 @@ public class DiaryType {
     public String getContent(){
         return  content;
     }
+
+    public DiaryScope getScope() {return scope;}
 }
 
